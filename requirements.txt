@@ -1,0 +1,8 @@
+Flask
+flask_cors
+requests
+msal
+gunicorn
+flask_talisman
+pytz
+python_dotenv
