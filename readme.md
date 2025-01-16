@@ -1,29 +1,28 @@
+# Business Scheduling with Microsoft Graph API
 
-# Agendamento de Negócios com Microsoft Graph API
+This Flask application enables the creation, listing, and retrieval of appointments for businesses using **Microsoft Bookings** via the **Microsoft Graph API**. The goal is to integrate scheduling functionalities into a system using MSAL authentication and interactions with the Microsoft Graph API.
 
-Esta aplicação Flask permite criar, listar e obter agendamentos para negócios que utilizam o **Microsoft Bookings** através da  **Microsoft Graph API** . O objetivo é integrar funcionalidades de agendamento em um sistema utilizando autenticação via MSAL e interações com a API do Microsoft Graph.
+## Features
 
-## Funcionalidades
+* **List Businesses** (`GET /businesses`): Retrieves a list of all businesses configured in Microsoft Bookings.
+* **List Appointments** (`GET /appointments/{business_id}`): Retrieves all appointments for a specific business identified by `business_id`.
+* **Create Appointment** (`POST /appointments/{business_id}`): Creates a new appointment for a specific business. Appointment data is provided in the request body.
 
-* **Listar Negócios** (`GET /businesses`): Recupera uma lista de todos os negócios configurados no Microsoft Bookings.
-* **Listar Agendamentos** (`GET /appointments/{business_id}`): Recupera todos os agendamentos de um negócio específico, identificado pelo `business_id`.
-* **Criar Agendamento** (`POST /appointments/{business_id}`): Cria um novo agendamento para um negócio específico. Os dados do agendamento são fornecidos no corpo da requisição.
+## Prerequisites
 
-## Pré-requisitos
+* **Python 3.x** installed on your system.
+* **Microsoft Azure App Registration** with permissions to access the Microsoft Graph API (using `CLIENT_ID`, `CLIENT_SECRET`, and `TENANT_ID` credentials).
+* **Microsoft Graph API** configured to manage Booking Businesses and Appointments.
 
-* **Python 3.x** instalado no seu sistema.
-* **Microsoft Azure App Registration** com permissão para acessar a API do Microsoft Graph (usando as credenciais `CLIENT_ID`, `CLIENT_SECRET` e `TENANT_ID`).
-* **Microsoft Graph API** configurada para manipular Booking Businesses e Agendamentos.
+### Dependencies
 
-### Dependências
-
-As dependências podem ser instaladas com o seguinte comando:
+Dependencies can be installed using the following command:
 
 ```bash
 pip install -r requirements.txt
 ```
 
-O arquivo `requirements.txt` deve conter as seguintes dependências:
+The `requirements.txt` file should include the following dependencies:
 
 ```
 Flask
@@ -33,134 +32,135 @@ flask-cors
 python-dotenv
 ```
 
-## Variáveis de Ambiente
+## Environment Variables
 
-A aplicação requer que as credenciais do Azure sejam configuradas no arquivo `.env` na raiz do projeto. O arquivo `.env` deve conter as seguintes variáveis:
+The application requires Azure credentials to be configured in the `.env` file at the project root. The `.env` file should contain the following variables:
 
 ```env
-CLIENT_ID=<seu_client_id>
-CLIENT_SECRET=<seu_client_secret>
-TENANT_ID=<seu_tenant_id>
+CLIENT_ID=<your_client_id>
+CLIENT_SECRET=<your_client_secret>
+TENANT_ID=<your_tenant_id>
 ```
 
-Essas variáveis são usadas para autenticação e autorização com a  **Microsoft Graph API** .
+These variables are used for authentication and authorization with the **Microsoft Graph API**.
 
-## Executando a Aplicação
+## Running the Application
 
-Para rodar a aplicação, execute o seguinte comando:
+To run the application, execute the following command:
 
 ```bash
 python app.py
 ```
 
-O servidor Flask será iniciado no endereço `http://127.0.0.1:5000/`.
+The Flask server will start at `http://127.0.0.1:5000/`.
 
 ## Endpoints
 
-### 1. **Listar Negócios**
+### 1. **List Businesses**
 
-* **Método** : `GET`
-* **URL** : `/businesses`
-* **Descrição** : Retorna uma lista de negócios configurados no Microsoft Bookings.
-* **Resposta Exemplo** :
-
-```json
-  {
-      "@odata.context": "https://graph.microsoft.com/v1.0/$metadata#solutions/bookingBusinesses",
-      "value": [
-          {
-              "displayName": "Teste",
-              "id": "Teste@systemautomationgroup.onmicrosoft.com"
-          }
-      ]
-  }
-```
-
-### 2. **Listar Agendamentos**
-
-* **Método** : `GET`
-* **URL** : `/appointments/{business_id}`
-* **Parâmetro** : `business_id` (ID do negócio)
-* **Descrição** : Retorna todos os agendamentos para um negócio específico.
-* **Resposta Exemplo** :
+* **Method**: `GET`
+* **URL**: `/businesses`
+* **Description**: Returns a list of businesses configured in Microsoft Bookings.
+* **Example Response**:
 
 ```json
-  {
-      "value": [
-          {
-              "id": "a6b5b8f8-81a1-4d71-b722-4d3d6e88889b",
-              "startDateTime": {
-                  "dateTime": "2025-01-15T10:00:00",
-                  "timeZone": "UTC"
-              },
-              "endDateTime": {
-                  "dateTime": "2025-01-15T10:30:00",
-                  "timeZone": "UTC"
-              },
-              "serviceId": "c2be51d6-2b2e-4709-87b2-5ce3335f1136",
-              "customer": {
-                  "emailAddress": "cliente@example.com",
-                  "name": "Nome do Cliente",
-                  "phone": "11987654321"
-              },
-              "staffMemberIds": ["6d8cbee8-8456-40bb-9828-5bf4d30a9aec"]
-          }
-      ]
-  }
+{
+    "@odata.context": "https://graph.microsoft.com/v1.0/$metadata#solutions/bookingBusinesses",
+    "value": [
+        {
+            "displayName": "Test",
+            "id": "Test@systemautomationgroup.onmicrosoft.com"
+        }
+    ]
+}
 ```
 
-### 3. **Criar Agendamento**
+### 2. **List Appointments**
 
-* **Método** : `POST`
-* **URL** : `/appointments/{business_id}`
-* **Parâmetro** : `business_id` (ID do negócio)
-* **Corpo da Requisição** :
-  O corpo da requisição deve conter os seguintes dados para criar um agendamento:
+* **Method**: `GET`
+* **URL**: `/appointments/{business_id}`
+* **Parameter**: `business_id` (Business ID)
+* **Description**: Returns all appointments for a specific business.
+* **Example Response**:
 
 ```json
-  {
-      "start_time": "2025-01-15T10:00:00",
-      "end_time": "2025-01-15T10:30:00",
-      "service_id": "c2be51d6-2b2e-4709-87b2-5ce3335f1136",
-      "customer_email": "cliente@example.com",
-      "customer_name": "Nome do Cliente",
-      "customer_phone": "11987654321",
-      "staff_member_id": "6d8cbee8-8456-40bb-9828-5bf4d30a9aec"
-  }
+{
+    "value": [
+        {
+            "id": "a6b5b8f8-81a1-4d71-b722-4d3d6e88889b",
+            "startDateTime": {
+                "dateTime": "2025-01-15T10:00:00",
+                "timeZone": "UTC"
+            },
+            "endDateTime": {
+                "dateTime": "2025-01-15T10:30:00",
+                "timeZone": "UTC"
+            },
+            "serviceId": "c2be51d6-2b2e-4709-87b2-5ce3335f1136",
+            "customer": {
+                "emailAddress": "customer@example.com",
+                "name": "Customer Name",
+                "phone": "11987654321"
+            },
+            "staffMemberIds": ["6d8cbee8-8456-40bb-9828-5bf4d30a9aec"]
+        }
+    ]
+}
 ```
 
-* **Resposta Exemplo** :
+### 3. **Create Appointment**
+
+* **Method**: `POST`
+* **URL**: `/appointments/{business_id}`
+* **Parameter**: `business_id` (Business ID)
+* **Request Body**:
+  The request body must include the following data to create an appointment:
 
 ```json
-  {
-      "id": "a6b5b8f8-81a1-4d71-b722-4d3d6e88889b",
-      "startDateTime": {
-          "dateTime": "2025-01-15T10:00:00",
-          "timeZone": "UTC"
-      },
-      "endDateTime": {
-          "dateTime": "2025-01-15T10:30:00",
-          "timeZone": "UTC"
-      },
-      "serviceId": "c2be51d6-2b2e-4709-87b2-5ce3335f1136",
-      "customer": {
-          "emailAddress": "cliente@example.com",
-          "name": "Nome do Cliente",
-          "phone": "11987654321"
-      },
-      "staffMemberIds": ["6d8cbee8-8456-40bb-9828-5bf4d30a9aec"]
-  }
+{
+    "start_time": "2025-01-15T10:00:00",
+    "end_time": "2025-01-15T10:30:00",
+    "service_id": "c2be51d6-2b2e-4709-87b2-5ce3335f1136",
+    "customer_email": "customer@example.com",
+    "customer_name": "Customer Name",
+    "customer_phone": "11987654321",
+    "staff_member_id": "6d8cbee8-8456-40bb-9828-5bf4d30a9aec"
+}
 ```
 
-## Erros Comuns
+* **Example Response**:
 
-* **401 Unauthorized** : Verifique se o `CLIENT_ID`, `CLIENT_SECRET` e `TENANT_ID` estão corretos e se o aplicativo possui permissões adequadas no Azure.
-* **400 Bad Request** : O formato dos dados fornecidos para a criação de um agendamento pode estar incorreto. Verifique os campos do JSON enviado.
+```json
+{
+    "id": "a6b5b8f8-81a1-4d71-b722-4d3d6e88889b",
+    "startDateTime": {
+        "dateTime": "2025-01-15T10:00:00",
+        "timeZone": "UTC"
+    },
+    "endDateTime": {
+        "dateTime": "2025-01-15T10:30:00",
+        "timeZone": "UTC"
+    },
+    "serviceId": "c2be51d6-2b2e-4709-87b2-5ce3335f1136",
+    "customer": {
+        "emailAddress": "customer@example.com",
+        "name": "Customer Name",
+        "phone": "11987654321"
+    },
+    "staffMemberIds": ["6d8cbee8-8456-40bb-9828-5bf4d30a9aec"]
+}
+```
 
-## Contribuições
+## Common Errors
 
-Se você quiser contribuir para este projeto, sinta-se à vontade para fazer um fork e enviar pull requests.
+* **401 Unauthorized**: Verify that `CLIENT_ID`, `CLIENT_SECRET`, and `TENANT_ID` are correct and that the app has the appropriate permissions in Azure.
+* **400 Bad Request**: The format of the data provided for creating an appointment may be incorrect. Check the JSON fields in the request.
 
-## Licença
+## Contributions
 
-Este projeto é licenciado sob a [MIT License](https://chatgpt.com/c/LICENSE).
+If you want to contribute to this project, feel free to fork the repository and submit pull requests.
+
+## License
+
+This project is licensed under the [MIT License]
+```
